@@ -9,6 +9,12 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: 1234
+  test-db:
+    image: postgres:15
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: 1234
 
   adminer:
     image: adminer
