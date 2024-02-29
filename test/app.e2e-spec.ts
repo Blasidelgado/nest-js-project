@@ -5,6 +5,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { AuthDto } from 'src/auth/dto';
 import * as pactum from 'pactum'; 
 import { todo } from 'node:test';
+import { EditUserDto } from 'src/user/dto';
 
 describe('App e2e', () => {
   // Importing a module before testing
@@ -113,10 +114,38 @@ describe('App e2e', () => {
   });
 
   describe('User', () => {
-    describe('Get me', () => {});
-    
-    describe('Edit user', () => {});
+    describe('Get me', () => {
+      it('should get current user', () => {
+        return pactum
+          .spec()
+          .get('/users/me')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}',
+          })
+          .expectStatus(200);
+      });
+    });
+
+    describe('Edit user', () => {
+      it('should edit user', () => {
+        const dto: EditUserDto = {
+          firstName: 'John',
+          email: 'johndoe@example.com',
+        };
+        return pactum
+          .spec()
+          .patch('/users')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}',
+          })
+          .withBody(dto)
+          .expectStatus(200)
+          .expectBodyContains(dto.firstName)
+          .expectBodyContains(dto.email);
+      });
+    });
   });
+
   describe('Bookmarks', () => {
     describe('Create bookmark', () => {});
 
